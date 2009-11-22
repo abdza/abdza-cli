@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+import os
+import sys
+import pickle
+import getopt
+
+def usage():
+    print "bm -g bookmark"
+def bmget(bname):
+    try:
+        bmf = open(os.path.join(homedir,'.bmarks'),'r')
+        bookmarks=pickle.load(bmf)
+        bmf.close()
+    except:
+        print "No bookmarks is saved yet"
+        sys.exit(2)
+    try:
+        print bookmarks[bname]
+    except:
+        print "No bookmark saved in %s" % bname
+        sys.exit(2)
+
+def bmsave(bname):
+    try:
+        bmf = open(os.path.join(homedir,'.bmarks'),'r')
+        bookmarks=pickle.load(bmf)
+        bmf.close()
+    except:
+        bookmarks={}
+    bookmarks[bname]=curdir
+    bmf = open(os.path.join(homedir,'.bmarks'),'w')
+    pickle.dump(bookmarks,bmf)
+    bmf.close()
+    print "Bookmarked '%s' into %s" % (curdir,bname)
+
+curdir=os.getcwd()
+homedir=os.getenv("HOME")
+try:
+    opts,args = getopt.getopt(sys.argv[1:],"gs",["get","save"])
+except:
+    usage()
+    sys.exit(2)
+
+if len(opts)==0:
+    bmsave(args[0])
+else:
+    if opts[0][0] in ('-g','--get'):
+        bmget(args[0])
+    elif opts[0][0] in ('-s','--save'):
+        bmsave(args[0])
