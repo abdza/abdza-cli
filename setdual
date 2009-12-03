@@ -1,0 +1,6 @@
+#!/bin/bash
+    vgavid=`xrandr | grep VGA | awk '{print $1}'`
+    lvdsvid=`xrandr | grep LVDS | awk '{print $1}'`
+    if [ $vgavid ]; then
+       xrandr --output $vgavid --mode 1024x768 --left-of $lvdsvid --output $lvdsvid --mode 1366x768
+    fi
